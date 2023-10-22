@@ -5,7 +5,7 @@ function AuthorPage() {
   const [authors, setAuthors] = useState([]);
 
   useEffect(() => {
-    // Aquí puedes realizar una solicitud HTTP al servidor Spring para obtener la lista de autores y actualizar el estado "authors".
+    // Aqui se debería conectar con SPring
   }, []);
 
   return (

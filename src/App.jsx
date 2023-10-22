@@ -2,6 +2,9 @@ import React from 'react';
 import {Route, Routes, BrowserRouter} from 'react-router-dom';
 import LibroPage from './pages/libroPage';
 import AuthorPage from './pages/authorPage';
+import LibroForm from './components/LibroForm';
+import AuthorForm from './components/AuthorForm';
+
 
 function App() {
   return (
@@ -17,6 +20,8 @@ function App() {
       <Routes>
         <Route path='/libro' element={<LibroPage/>}/>
         <Route path='/author' element={<AuthorPage/>}/>
+        <Route path='/libro/form' element={<LibroForm/>}/>
+        <Route path='/author/form' element={<AuthorForm/>}/>
       </Routes>
     </BrowserRouter>
   );
