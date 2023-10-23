@@ -1,6 +1,9 @@
 import React, { useState, useEffect } from 'react';
 
-function AuthorForm({ authorToEdit, onAddOrEditAuthor }) {
+
+const authorToEdit={id: 1, nombre: 'Vegeta777', nacionalidad: 'Venus'} 
+
+function AuthorForm({ authorToEdit2, onAddOrEditAuthor }) {
   const [authorData, setAuthorData] = useState({ nombre: '', nacionalidad: '' });
 
   useEffect(() => {

@@ -1,6 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import Author from '../components/Author';
 
+
+const exampleAuthors = [
+  { id: 1, nombre: 'Luka Vicenzo Qochiolla', nacionalidad: 'Marte' },
+  { id: 2, nombre: 'Ibrahimovi©', nacionalidad: 'Sol' },]
+
 function AuthorPage() {
   const [authors, setAuthors] = useState([]);
 
@@ -11,7 +16,7 @@ function AuthorPage() {
   return (
     <div>
       <h1>Authors</h1>
-      {authors.map(author => (
+      {exampleAuthors.map(author => (
         <Author key={author.id} author={author} />
       ))}
     </div>
