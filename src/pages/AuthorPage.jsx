@@ -10,7 +10,7 @@ function AuthorPage() {
   const [authors, setAuthors] = useState([]);
 
   useEffect(() => {
-    // Aqui se debería conectar con SPring
+    // Aqui se debería conectar con Spring
   }, []);
 
   return (
