@@ -1,12 +1,14 @@
 import React, { useState, useEffect } from "react";
+import { Link } from "react-router-dom";
+import LibroForm from "../components/LibroForm";
 import Libro from "../components/Libro";
 import instance from "../axios.js";
 import axios from "axios";
 
-/*const exampleBooks = [
+const exampleBooks = [
     { id: 1, titulo: 'Mein Kampf', fechaPublicacion: '2022-01-01', autorId: 1 },
     { id: 2, titulo: 'El queso y los gusanos', fechaPublicacion: '2022-02-01', autorId: 2 }
-  ];*/
+  ];
 
 function LibroPage() {
     const [libros, setLibros] = useState([]);
@@ -20,12 +22,15 @@ function LibroPage() {
             setLibros(librosUpdated)*/
         })
     }, []);
+    
 
     return (
+        
         <div>
             <h1>Libro Page</h1>
-            {libros.map((libro) => (
+            {exampleBooks.map((libro) => (
                 <Libro key={libro.id} libro={libro} />
+                
             ))}
         </div>
     );

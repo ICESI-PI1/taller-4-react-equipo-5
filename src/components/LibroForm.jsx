@@ -1,6 +1,10 @@
 import React, { useState, useEffect } from 'react';
 
-function BookForm({ bookToEdit, onAddOrEditBook }) {
+const bookToEdit2={id: 1, titulo: 'Mein Kampf', fechaPublicacion: '2022-01-01', autorId: 1} 
+
+function BookForm( {bookToEdit} ) {
+
+  console.log(bookToEdit)
   const [bookData, setBookData] = useState({
     titulo: '',
     fechaPublicacion: '',

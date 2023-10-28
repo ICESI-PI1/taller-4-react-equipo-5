@@ -1,5 +1,5 @@
 import React from 'react';
-import {Route, Routes, BrowserRouter} from 'react-router-dom';
+import {Route, Routes, BrowserRouter, Link} from 'react-router-dom';
 import LibroPage from './pages/libroPage';
 import AuthorPage from './pages/authorPage';
 import LibroForm from './components/LibroForm';
@@ -16,14 +16,23 @@ function App() {
                 <p>Esta es una aplicación de ejemplo construida con React y Spring.</p>
                 <p>Aquí puedes encontrar información sobre autores y libros.</p>
                 <p>Utiliza los enlaces de navegación para explorar la aplicación.</p>
+                <Link to="/libro">
+                    <button>Libros</button>
+                </Link>
+                <Link to="/author">
+                    <button>Autores</button>
+                </Link>
 
             </div>
             <Routes>
                 <Route path='/libro' element={<LibroPage/>}/>
                 <Route path='/author' element={<AuthorPage/>}/>
-                <Route path='/libro/form' element={<LibroForm/>}/>
+                <Route path='/libro/form' element={<LibroForm/>}>
+                  <Route path="libro" element={<LibroForm />} />
+                </Route>
                 <Route path='/author/form' element={<AuthorForm/>}/>
                 <Route path='/authenticate' element={<LoginPage/>}/>
+                
             </Routes>
         </BrowserRouter>
     );
