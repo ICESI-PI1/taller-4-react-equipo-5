@@ -1,9 +1,6 @@
 import React, { useState, useEffect } from 'react';
 
-const bookToEdit2={id: 1, titulo: 'Mein Kampf', fechaPublicacion: '2022-01-01', autorId: 1} 
-
-function LibroForm( {libro} ) {
-  console.log(libro)
+function BookForm({ bookToEdit, onAddOrEditBook }) {
   const [bookData, setBookData] = useState({
     titulo: '',
     fechaPublicacion: '',
@@ -11,15 +8,15 @@ function LibroForm( {libro} ) {
   });
 
   useEffect(() => {
-    if (libro) {
+    if (bookToEdit) {
       // Si se proporciona un libro para editar, inicializa el estado del formulario con los datos del libro
       setBookData({
-        titulo: libro.titulo || '',
-        fechaPublicacion: libro.fechaPublicacion || '',
-        autorId: libro.autorId || '',
+        titulo: bookToEdit.titulo || '',
+        fechaPublicacion: bookToEdit.fechaPublicacion || '',
+        autorId: bookToEdit.autorId || '',
       });
     }
-  }, [libro]);
+  }, [bookToEdit]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -57,10 +54,10 @@ function LibroForm( {libro} ) {
         onChange={handleChange}
       />
       <button type="submit">
-        {libro ? 'Editar Libro' : 'Agregar Libro'}
+        {bookToEdit ? 'Editar Libro' : 'Agregar Libro'}
       </button>
     </form>
   );
 }
 
-export default LibroForm;
+export default BookForm;
