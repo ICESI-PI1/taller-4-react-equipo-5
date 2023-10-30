@@ -8,7 +8,16 @@ import LoginPage from "./pages/LoginPage.jsx";
 import HomePage from "./pages/HomePage.jsx";
 import ProtectedRoute from "./protectedRoute/ProtectedRoute.jsx";
 import {AuthProvider} from "./context/AuthContext";
-
+import {
+    Table,
+    Button,
+    Container,
+    Modal,
+    ModalHeader,
+    ModalBody,
+    FormGroup,
+    ModalFooter,
+  } from "reactstrap";
 
 function App() {
     return (
