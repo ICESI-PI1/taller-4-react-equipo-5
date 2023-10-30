@@ -5,7 +5,17 @@ import AuthorPage from './pages/authorPage';
 import LibroForm from './components/LibroForm';
 import AuthorForm from './components/AuthorForm';
 import LoginPage from "./pages/LoginPage.jsx";
-
+import {
+    Table,
+    Button,
+    Container,
+    Modal,
+    ModalHeader,
+    ModalBody,
+    FormGroup,
+    ModalFooter,
+  } from "reactstrap";
+  
 
 function App() {
     return (
