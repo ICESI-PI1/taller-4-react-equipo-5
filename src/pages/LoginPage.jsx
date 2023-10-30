@@ -5,7 +5,7 @@ import {
     Button, Center,
     FormControl,
     FormErrorMessage,
-    FormLabel, Heading, HStack,
+    FormLabel, Heading,
     Input, VStack,
 } from "@chakra-ui/react";
 import axios from "axios";
@@ -13,9 +13,11 @@ import instance from "../axios.js";
 import {useFormik} from "formik";
 import * as Yup from 'yup';
 import {useAuthContext} from "../context/AuthContext.jsx";
+import {useNavigate} from "react-router-dom";
 
 function LoginPage() {
     const {authData, login, logout} = useAuthContext()
+    const navigate = useNavigate(); // Para redireccionar al usuario
 
     const formik = useFormik({
         initialValues: {
@@ -29,8 +31,9 @@ function LoginPage() {
                     "username": values.username,
                     "password": values.password
                 }).then(res => {
-                        login('Bearer ' + res.data.token)
-                        console.log("token: " + authData)
+                        localStorage.setItem('token', res.data.token)
+                        login()
+                        navigate("/home"); // Navegar a home luego de loguearse
                     }
                 )
             } catch (e) {

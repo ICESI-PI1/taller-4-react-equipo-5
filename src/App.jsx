@@ -15,17 +15,32 @@ function App() {
         <AuthProvider>
             <BrowserRouter>
                 <Routes>
-                    <Route path='/' element={<HomePage/>}/>
-                    <Route path='/libro' element={<LibroPage/>}/>
-                    <Route path='/author' element={<AuthorPage/>}/>
-                    <Route path='/libro/form' element={<LibroForm/>}/>
-                    <Route path='/author/form' element={<AuthorForm/>}/>
-                    <Route path='/authenticate' element={<LoginPage/>}/>
-                    <Route path='/libros' element={
+                    <Route path='/home' element={
+                        <ProtectedRoute>
+                            <HomePage/>
+                        </ProtectedRoute>
+                    }/>
+                    <Route path='/libro' element={
                         <ProtectedRoute>
                             <LibroPage/>
                         </ProtectedRoute>
                     }/>
+                    <Route path='/author' element={
+                        <ProtectedRoute>
+                            <AuthorPage/>
+                        </ProtectedRoute>
+                    }/>
+                    <Route path='/libro/form' element={
+                        <ProtectedRoute>
+                            <LibroForm/>
+                        </ProtectedRoute>
+                    }/>
+                    <Route path='/author/form' element={
+                        <ProtectedRoute>
+                            <AuthorForm/>
+                        </ProtectedRoute>
+                    }/>
+                    <Route path='/' element={<LoginPage/>}/>
                 </Routes>
             </BrowserRouter>
         </AuthProvider>
