@@ -30,13 +30,19 @@ function LoginPage() {
                 await axios.post(instance.getUri() + "/authenticate", {
                     "username": values.username,
                     "password": values.password
-                }).then(res => {
-                        localStorage.setItem('token', res.data.token)
-                        login()
-                        navigate("/home"); // Navegar a home luego de loguearse
-                    }
-                )
+                })
+                    .then(res => {
+                            localStorage.setItem('token', res.data.token)
+                            login()
+                            navigate("/home"); // Navegar a home luego de loguearse
+                        }
+                    )
             } catch (e) {
+                if (e.toString().includes("Network Error")) {
+                    alert("Can't connect with backend")
+                } else {
+                    alert("Incorrect password")
+                }
                 console.log(e)
             }
         },
@@ -49,38 +55,50 @@ function LoginPage() {
     return (
         <AbsoluteCenter>
             <Center>
-                <Heading as="h1">
+                <Heading marginBottom={'35px'} as="h1">
                     Log-In
                 </Heading>
             </Center>
             <form onSubmit={formik.handleSubmit}>
                 <VStack spacing={30}>
                     <FormControl isInvalid={formik.touched.username && formik.errors.username}>
-                        <FormLabel htmlFor={"username"} fontSize={'25px'} mb={'5px'}>
+                        <FormLabel htmlFor={"username"} fontSize={'20px'} mb={'5px'}>
                             Username
                         </FormLabel>
-                        <Input id="username" name="username" {...formik.getFieldProps("username")}
-                               fontSize={'20px'}
-                               placeholder='username'/>
-                        <FormErrorMessage>
+                        <Input
+                            sx={{'::placeholder': {fontSize: '15px'}}}
+                            border={"1px solid #ccc"}
+                            borderRadius={"5px"}
+                            boxShadow={"0 2px 4px rgba(0, 0, 0, 0.1)"}
+                            transition={"border-color 0.3s ease"}
+                            id="username" name="username" {...formik.getFieldProps("username")}
+                            fontSize={'20px'}
+                            placeholder='username'/>
+                        <FormErrorMessage className="error-message">
                             {formik.errors.username}
                         </FormErrorMessage>
                     </FormControl>
 
-                    <FormControl isInvalid={formik.touched.username && formik.errors.username}>
-                        <FormLabel htmlFor={"password"} fontSize={'25px'} mb={'5px'}>
+                    <FormControl isInvalid={formik.touched.password && formik.errors.password}>
+                        <FormLabel htmlFor={"password"} fontSize={'20px'} mb={'5px'}>
                             Password
                         </FormLabel>
-                        <Input type={"password"} id="password" name="password" {...formik.getFieldProps("password")}
+                        <Input sx={{'::placeholder': {fontSize: '15px'}}}
+                               border={"1px solid #ccc"}
+                               borderRadius={"5px"}
+                               boxShadow={"0 2px 4px rgba(0, 0, 0, 0.1)"}
+                               transition={"border-color 0.3s ease"}
+                               type={"password"} id="password" name="password" {...formik.getFieldProps("password")}
                                fontSize={'20px'}
                                placeholder='password'/>
-                        <FormErrorMessage>
+                        <FormErrorMessage className="error-message">
                             {formik.errors.password}
                         </FormErrorMessage>
                     </FormControl>
 
                     <Center>
-                        <Button fontSize={'15px'} variant='solid' colorScheme='blue' type={"submit"}
+                        <Button className={"button"} fontSize={'15px'} variant='solid' colorScheme='blue'
+                                type={"submit"}
                                 onClick={formik.handleSubmit}>
                             Submit
                         </Button>
