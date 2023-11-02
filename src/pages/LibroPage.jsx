@@ -10,34 +10,62 @@ import {
 } from "reactstrap";
 import axios from "../axios.js";
 import instance from "../axios.js";
+import NavBar from "../components/NavBar.jsx";
+import {AbsoluteCenter, Center, VStack} from "@chakra-ui/react";
 
 function LibroPage() {
     const [libros, setLibros] = useState([]);
     const [modalInsertar, setModalInsertar] = useState(false);
     const [modalEdit, setModalEdit] = useState(false);
 
-
     useEffect(() => {
-        console.log(instance.getUri())
-        console.log(instance.defaults.headers.common.Authorization)
+        queryLibros()
+    }, []);
+
+    const queryLibros = () => {
         setLibros(
             async () => {
-                await axios.get(instance.getUri() + "/libros"
-                    , {
-                        headers:
-                            {"Authorization": `Bearer ${localStorage.getItem('token')}`}
-                    }).then(res => {
-                        (res.data)
-                        console.log(res.data)
-                    }
-                )
+                await axios.get(instance.getUri() + "/libros")
+                    .then(res => {
+                            (res.data)
+                        }
+                    )
             }
         )
-    }, []);
+    }
+
+    const onCreateSubmit = (e) => {
+        e.preventDefault()
+
+        try {
+            console.log(e.target.titulo.value)
+         axios.post(instance.getUri() + "/libros", {
+             'titulo': e.target.titulo.value,
+             'fechaPublicacion': e.target.date.value,
+             'autorId': e.target.autorId.value
+         }).then(res => {
+             if (res.status === 200) {
+                 alert("'Libro' created")
+                 queryLibros()
+             } else {
+                 alert("'Libro' couldn't be created")
+             }
+          })
+        } catch (e) {
+            alert("Can't connect with backend")
+        }
+    }
+
+    const onCreateButton = (e) => {
+        document.getElementById("createSubmitBtn").click()
+    }
 
     const handleChange = (e) => {
         // Actualiza el estado del formulario
-        setLibros({...libros, [e.target.name]: e.target.value});
+        setLibros({
+            ...libros,
+            [e.target.name]: e.target.value
+        });
     }
     const handleModalInsertShow = () => {
         setModalInsertar(true);
@@ -71,13 +99,14 @@ function LibroPage() {
         // Aquí deberías llamar a Spring para editar un libro
         // Esto es de prueba
         let list = libros
+        /*
         libros.map((libro) => {
             if (libro.id === libros.id) {
                 libro.titulo = libros.titulo
                 libro.fechaPublicacion = libros.fechaPublicacion
                 libro.autorId = libros.autorId
             }
-        })
+        })*/
         setLibros(list);
         handleModalEditHide();
     }
@@ -88,128 +117,137 @@ function LibroPage() {
         let opt = window.confirm("¿Está seguro que desea eliminar el libro?")
         if (opt) {
             let list = libros
+            /*
             list.map((libro) => {
                 if (libro.id == id) {
                     list.splice(list.indexOf(libro), 1)
                 }
-            })
+            })*/
             setLibros(libros);
         }
     }
 
     return (
-        <div>
-            <h1>Libro Page</h1>
-            <Button color="success" onClick={handleModalInsertShow}>Agregar Libro</Button>
-            <br/><br/>
-            <Table>
-                <thead>
-                <tr>
-                    <th>Id</th>
-                    <th>Título</th>
-                    <th>Fecha de Publicación</th>
-                    <th>Autor ID</th>
-                    <th>Acciones</th>
-                </tr>
-                </thead>
-                <tbody>
-                {libros.map((libro) => (
-                    <tr>
-                        <td>{libro.id}</td>
-                        <td>{libro.titulo}</td>
-                        <td>{libro.fechaPublicacion}</td>
-                        <td>{libro.autorId}</td>
-                        <td>
-                            <Button color="primary" onClick={() => handleModalEditShow(libro)}>Editar</Button>{" "}
-                            <Button color="danger" onClick={() => deleteLibro(libro.id)}>Eliminar</Button>
-                        </td>
-                    </tr>
-                ))}
-                </tbody>
-            </Table>
+        <NavBar>
+            <Center>
+                <VStack width={"80%"} alignContent={"center"} alignItems="center">
+                    <h1>Libros</h1>
+                    <Button color="success" onClick={handleModalInsertShow} style={{alignSelf: "flex-end"}}>
+                        Agregar Libro
+                    </Button>
+                    <br/><br/>
+                    <Table>
+                        <thead>
+                        <tr>
+                            <th>Id</th>
+                            <th>Título</th>
+                            <th>Fecha de Publicación</th>
+                            <th>Autor ID</th>
+                            <th>Acciones</th>
+                        </tr>
+                        </thead>
+                        <tbody>
 
-            <Modal isOpen={modalInsertar}>
-                <ModalHeader>
-                    <div><h3>Insertar Libro</h3></div>
-                </ModalHeader>
+                        </tbody>
+                    </Table>
+                    <Modal isOpen={modalInsertar}>
+                        <ModalHeader>
+                            <div><h3>Agregar Libro</h3></div>
+                        </ModalHeader>
 
-                <ModalBody>
+                        <ModalBody>
+                        <form onSubmit={onCreateSubmit}>
+                            <FormGroup>
+                                <label>Título:</label>
+                                <input
+                                    style = {{marginLeft: '10px'}}
+                                    className={"input"}
+                                    type="text"
+                                    name="titulo"
+                                    onChange={handleChange}
+                                />
+                            </FormGroup>
+                            <FormGroup>
+                                <label>Fecha de Publicación:</label>
+                                <input
+                                    style = {{marginLeft: '10px'}}
+                                    className={"input"}
+                                    type="date"
+                                    name="fechaPublicacion"
+                                    onChange={handleChange}
+                                />
+                            </FormGroup>
+                            <FormGroup>
+                                <label>ID del Autor:</label>
+                                <input
+                                    style = {{marginLeft: '10px'}}
+                                    className={"input"}
+                                    type="number"
+                                    name="autorId"
+                                    onChange={handleChange}
+                                />
+                            </FormGroup>
+                            <button id={"createSubmitBtn"} type={"submit"} style={{display: 'none'}}>
+                                Submit
+                            </button>
+                        </form>
 
-                    <FormGroup>
-                        <label>Título:</label>
-                        <input
-                            type="text"
-                            name="titulo"
-                            onChange={handleChange}
-                        />
-                    </FormGroup>
-                    <FormGroup>
-                        <label>Fecha de Publicación:</label>
-                        <input
-                            type="date"
-                            name="fechaPublicacion"
-                            onChange={handleChange}
-                        />
-                    </FormGroup>
-                    <FormGroup>
-                        <label>ID del Autor:</label>
-                        <input
-                            type="number"
-                            name="autorId"
-                            onChange={handleChange}
-                        />
-                    </FormGroup>
+                        </ModalBody>
 
-                </ModalBody>
+                        <ModalFooter>
+                            <Button color="primary" onClick={onCreateButton}>Insertar</Button>
+                            <Button color="danger" onClick={handleModalInsertHide}>Cancelar</Button>
+                        </ModalFooter>
+                    </Modal>
 
-                <ModalFooter>
-                    <Button color="primary" onClick={insertLibro}>Insertar</Button>
-                    <Button color="danger" onClick={handleModalInsertHide}>Cancelar</Button>
-                </ModalFooter>
-            </Modal>
+                    <Modal isOpen={modalEdit}>
+                        <ModalHeader>
+                            <div><h3>Editar Libro</h3></div>
+                        </ModalHeader>
 
-            <Modal isOpen={modalEdit}>
-                <ModalHeader>
-                    <div><h3>Editar Libro</h3></div>
-                </ModalHeader>
+                        <ModalBody>
+                            <FormGroup>
+                                <label>Título:</label>
+                                <input
+                                    className={"input"}
+                                    type="text"
+                                    name="titulo"
+                                    onChange={handleChange}
+                                    value={libros.titulo}
+                                />
+                            </FormGroup>
+                            <FormGroup>
+                                <label>Fecha de Publicación:</label>
+                                <input
+                                    className={"input"}
+                                    type="date"
+                                    name="fechaPublicacion"
+                                    onChange={handleChange}
+                                    value={libros.fechaPublicacion}
+                                />
+                            </FormGroup>
+                            <FormGroup>
+                                <label>ID del Autor:</label>
+                                <input
+                                    className={"input"}
+                                    type="number"
+                                    name="autorId"
+                                    onChange={handleChange}
+                                    value={libros.autorId}
+                                />
+                            </FormGroup>
+                        </ModalBody>
 
-                <ModalBody>
-                    <FormGroup>
-                        <label>Título:</label>
-                        <input
-                            type="text"
-                            name="titulo"
-                            onChange={handleChange}
-                            value={libros.titulo}
-                        />
-                    </FormGroup>
-                    <FormGroup>
-                        <label>Fecha de Publicación:</label>
-                        <input
-                            type="date"
-                            name="fechaPublicacion"
-                            onChange={handleChange}
-                            value={libros.fechaPublicacion}
-                        />
-                    </FormGroup>
-                    <FormGroup>
-                        <label>ID del Autor:</label>
-                        <input
-                            type="number"
-                            name="autorId"
-                            onChange={handleChange}
-                            value={libros.autorId}
-                        />
-                    </FormGroup>
-                </ModalBody>
-
-                <ModalFooter>
-                    <Button color="primary" onClick={() => editLibro(libros)}>Editar</Button>
-                    <Button color="danger" onClick={handleModalEditHide}>Cancelar</Button>
-                </ModalFooter>
-            </Modal>
-        </div>
-    );
+                        <ModalFooter>
+                            <Button color="primary" onClick={() => editLibro(libros)}>Editar</Button>
+                            <Button color="danger" onClick={handleModalEditHide}>Cancelar</Button>
+                        </ModalFooter>
+                    </Modal>
+                </VStack>
+            </Center>
+        </NavBar>
+    )
+        ;
 }
 
 export default LibroPage;
