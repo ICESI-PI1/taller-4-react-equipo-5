@@ -12,6 +12,9 @@ import axios from "../axios.js";
 import instance from "../axios.js";
 import NavBar from "../components/NavBar.jsx";
 import {AbsoluteCenter, Center, VStack} from "@chakra-ui/react";
+import '../App.css';
+
+
 
 function LibroPage() {
     const [libros, setLibros] = useState([]);
@@ -143,12 +146,21 @@ function LibroPage() {
     const handleAutorIdChange = (e) => {
         setEditingLibro({...editingLibro, autorId: e.target.value})
     }
+    const backgroundStyle = {
+        backgroundImage: "url('b2.jpg')",
+        backgroundPosition: 'center',
+        backgroundSize: 'cover',
+        backgroundRepeat: 'no-repeat',
+        height: '100vh',
+        width: '100vw',
+        color: 'white'
+    };
 
     return (
         <NavBar>
-            <Center>
-                <VStack width={"80%"} alignContent={"center"} alignItems="center">
-                    <h1>Libros</h1>
+            <Center style={backgroundStyle}>
+                <VStack width={"80%"} alignContent={"center"} alignItems="center" >
+                    <h1 style={{marginTop: "1px"}}>Libros</h1>
                     <Button color="success" onClick={handleModalInsertShow} style={{alignSelf: "flex-end"}}>
                         Agregar Libro
                     </Button>

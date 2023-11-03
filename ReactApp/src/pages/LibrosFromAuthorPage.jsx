@@ -19,9 +19,19 @@ function LibrosFromAuthorPage() {
         }
     };
 
+    const backgroundStyle = {
+        backgroundImage: "url('b2.jpg')",
+        backgroundPosition: 'center',
+        backgroundSize: 'cover',
+        backgroundRepeat: 'no-repeat',
+        height: '100vh',
+        width: '100vw',
+        color: 'white'
+    };
+
     return (
         <NavBar>
-            <Center>
+            <Center style={backgroundStyle}>
                 <VStack spacing={4} align="center">
                     <h1>Libros de un Autor</h1>
                     <Text fontSize="lg">Ingrese el ID del autor para ver sus libros:</Text>

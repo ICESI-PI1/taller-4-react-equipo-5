@@ -51,15 +51,23 @@ function LoginPage() {
             password: Yup.string().required("Required")
         }),
     });
-
+    const backgroundStyle = {
+        backgroundImage: "url('cielo.jpg')", // Replace 'path_to_your_image.jpg' with the path to your image
+        backgroundPosition: 'center',
+        backgroundSize: 'cover',
+        backgroundRepeat: 'no-repeat',
+        height: '100vh',
+        width: '100vw'
+    };
     return (
         <AbsoluteCenter>
-            <Center>
-                <Heading marginBottom={'35px'} as="h1">
-                    Log-In
-                </Heading>
-            </Center>
-            <form onSubmit={formik.handleSubmit}>
+            <AbsoluteCenter style={backgroundStyle}>
+                <Center>
+                    <Heading marginTop={'120px'} marginBottom={'35px'} as="h1">
+                        Log-In
+                    </Heading>
+                </Center>
+                <form onSubmit={formik.handleSubmit}>
                 <VStack spacing={30}>
                     <FormControl isInvalid={formik.touched.username && formik.errors.username}>
                         <FormLabel htmlFor={"username"} fontSize={'20px'} mb={'5px'}>
@@ -105,6 +113,7 @@ function LoginPage() {
                     </Center>
                 </VStack>
             </form>
+        </AbsoluteCenter>
         </AbsoluteCenter>
     )
 }

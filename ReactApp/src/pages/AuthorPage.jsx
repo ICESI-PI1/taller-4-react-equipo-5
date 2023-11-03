@@ -144,9 +144,9 @@ function AuthorPage() {
 
     return (
         <NavBar>
-            <Center>
+            <Center style={{ backgroundImage: `url(${'aldeantrad.png'}`, backgroundSize: 'cover', backgroundPosition: 'center', backgroundRepeat: 'no-repeat' }}>
                 <VStack width={"80%"} alignContent={"center"} alignItems="center">
-                    <h1>Autores</h1>
+                    <h1 style={{color: 'white'}}>Autores</h1>
                     <Button color="success" onClick={handleModalInsertShow} style={{alignSelf: "flex-end"}}>
                         Agregar Autor
                     </Button>
