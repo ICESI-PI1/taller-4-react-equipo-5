@@ -1,9 +1,5 @@
-# React + Vite
-    
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
-    
-Currently, two official plugins are available:
-    
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+# Asignación 4 - Computación en Internet II
+## Dylan Bermudez Cardona - Juan José López - Sara Cardona Vásquez
+
+Esta tarea involucra ReactJS junto con Spring para así crear una aplicación web.
     
