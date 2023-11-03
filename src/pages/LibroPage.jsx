@@ -17,56 +17,52 @@ function LibroPage() {
     const [libros, setLibros] = useState([]);
     const [modalInsertar, setModalInsertar] = useState(false);
     const [modalEdit, setModalEdit] = useState(false);
+    const [editingLibro, setEditingLibro] = useState();
 
     useEffect(() => {
         queryLibros()
     }, []);
 
     const queryLibros = () => {
-        setLibros(
-            async () => {
-                await axios.get(instance.getUri() + "/libros")
-                    .then(res => {
-                            (res.data)
-                        }
-                    )
-            }
-        )
+        try {
+            axios.get(instance.getUri() + "/libros")
+                .then(res => {
+                        setLibros(res.data)
+                    }
+                )
+        } catch (e) {
+            alert("Can't connect with backend")
+            console.log(e)
+        }
     }
 
     const onCreateSubmit = (e) => {
         e.preventDefault()
 
         try {
-            console.log(e.target.titulo.value)
-         axios.post(instance.getUri() + "/libros", {
-             'titulo': e.target.titulo.value,
-             'fechaPublicacion': e.target.date.value,
-             'autorId': e.target.autorId.value
-         }).then(res => {
-             if (res.status === 200) {
-                 alert("'Libro' created")
-                 queryLibros()
-             } else {
-                 alert("'Libro' couldn't be created")
-             }
-          })
+            axios.post(instance.getUri() + "/libros", {
+                'titulo': e.target.titulo.value,
+                'fechaPublicacion': e.target.fechaPublicacion.value,
+                'autorId': e.target.autorId.value
+            }).then(res => {
+                if (res.status === 200) {
+                    queryLibros()
+                    handleModalInsertHide()
+                } else {
+                    alert("'Libro' couldn't be created, maybe Autor doesn't exist")
+                }
+            })
         } catch (e) {
             alert("Can't connect with backend")
+            console.log(e)
         }
+
     }
 
     const onCreateButton = (e) => {
         document.getElementById("createSubmitBtn").click()
     }
 
-    const handleChange = (e) => {
-        // Actualiza el estado del formulario
-        setLibros({
-            ...libros,
-            [e.target.name]: e.target.value
-        });
-    }
     const handleModalInsertShow = () => {
         setModalInsertar(true);
     }
@@ -76,7 +72,7 @@ function LibroPage() {
     }
 
     const handleModalEditShow = (libro) => {
-        setLibros(libro);
+        setEditingLibro(libro);
         setModalEdit(true);
     }
 
@@ -84,47 +80,68 @@ function LibroPage() {
         setModalEdit(false);
     }
 
-    const insertLibro = (libro) => {
-        // Aquí deberías llamar a Spring para insertar un nuevo libro
-        // Esto es de prueba
-        // Simplemente agregamos el nuevo libro a la lista de libros
-        let newVal = {id: 3, titulo: libros.titulo, fechaPublicacion: libros.fechaPublicacion, autorId: libros.autorId}
-        let list = libros
-        list.push(newVal)
-        setLibros(list)
-        handleModalInsertHide();
-    }
-
-    const editLibro = (libro) => {
-        // Aquí deberías llamar a Spring para editar un libro
-        // Esto es de prueba
-        let list = libros
-        /*
-        libros.map((libro) => {
-            if (libro.id === libros.id) {
-                libro.titulo = libros.titulo
-                libro.fechaPublicacion = libros.fechaPublicacion
-                libro.autorId = libros.autorId
-            }
-        })*/
-        setLibros(list);
-        handleModalEditHide();
-    }
-
     const deleteLibro = (id) => {
-        // Aquí deberías llamar a Spring para eliminar un libro
-        // Esto es de prueba
         let opt = window.confirm("¿Está seguro que desea eliminar el libro?")
+
         if (opt) {
-            let list = libros
-            /*
-            list.map((libro) => {
-                if (libro.id == id) {
-                    list.splice(list.indexOf(libro), 1)
-                }
-            })*/
-            setLibros(libros);
+            try {
+                axios.delete(instance.getUri() + "/libros" + "/" + id)
+                    .then(res => {
+                            if (res.status === 204) {
+                                queryLibros()
+                            } else {
+                                alert("'Libro' couldn't be deleted")
+                            }
+                        }
+                    )
+            } catch (e) {
+                alert("Can't connect with backend")
+                console.log(e)
+            }
         }
+    }
+
+    const onEditSubmit = (e) => {
+        e.preventDefault()
+
+        try {
+            axios.put(instance.getUri() + "/libros" + "/" + editingLibro.id, {
+                'id': editingLibro.id,
+                'titulo': e.target.tituloEdit.value,
+                'fechaPublicacion': e.target.fechaPublicacionEdit.value,
+                'autorId': e.target.autorIdEdit.value
+            })
+                .then(res => {
+                    console.log(res.status)
+                        if (res.status === 200) {
+                            queryLibros()
+                            handleModalEditHide()
+                            flag = true;
+                        } else {
+                            alert("'Libro' couldn't be edited, maybe Autor doesn't exist")
+                        }
+                    }
+                )
+        } catch (e) {
+            alert("Can't connect with backend")
+            console.log(e)
+        }
+    }
+
+    const onEditButton = () => {
+        document.getElementById("editSubmitBtn").click()
+    }
+
+    const handleTituloChange = (e) => {
+        setEditingLibro({...editingLibro, titulo: e.target.value})
+    }
+
+    const handleFechaPublicacionChange = (e) => {
+        setEditingLibro({...editingLibro, fechaPubliacion: e.target.value})
+    }
+
+    const handleAutorIdChange = (e) => {
+        setEditingLibro({...editingLibro, autorId: e.target.value})
     }
 
     return (
@@ -139,7 +156,7 @@ function LibroPage() {
                     <Table>
                         <thead>
                         <tr>
-                            <th>Id</th>
+                            <th>ID</th>
                             <th>Título</th>
                             <th>Fecha de Publicación</th>
                             <th>Autor ID</th>
@@ -147,7 +164,22 @@ function LibroPage() {
                         </tr>
                         </thead>
                         <tbody>
-
+                        {libros.length > 0 ? libros.map((libro) => (
+                                <tr key={libro.id}>
+                                    <td>{libro.id}</td>
+                                    <td>{libro.titulo}</td>
+                                    <td>{libro.fechaPublicacion}</td>
+                                    <td>{libro.autorId}</td>
+                                    <td>
+                                        <Button color="primary"
+                                                onClick={() => handleModalEditShow(libro)}>Editar</Button>{" "}
+                                        <Button color="danger" onClick={() => deleteLibro(libro.id)}>Eliminar</Button>
+                                    </td>
+                                </tr>
+                            )) :
+                            <tr>
+                            </tr>
+                        }
                         </tbody>
                     </Table>
                     <Modal isOpen={modalInsertar}>
@@ -156,41 +188,38 @@ function LibroPage() {
                         </ModalHeader>
 
                         <ModalBody>
-                        <form onSubmit={onCreateSubmit}>
-                            <FormGroup>
-                                <label>Título:</label>
-                                <input
-                                    style = {{marginLeft: '10px'}}
-                                    className={"input"}
-                                    type="text"
-                                    name="titulo"
-                                    onChange={handleChange}
-                                />
-                            </FormGroup>
-                            <FormGroup>
-                                <label>Fecha de Publicación:</label>
-                                <input
-                                    style = {{marginLeft: '10px'}}
-                                    className={"input"}
-                                    type="date"
-                                    name="fechaPublicacion"
-                                    onChange={handleChange}
-                                />
-                            </FormGroup>
-                            <FormGroup>
-                                <label>ID del Autor:</label>
-                                <input
-                                    style = {{marginLeft: '10px'}}
-                                    className={"input"}
-                                    type="number"
-                                    name="autorId"
-                                    onChange={handleChange}
-                                />
-                            </FormGroup>
-                            <button id={"createSubmitBtn"} type={"submit"} style={{display: 'none'}}>
-                                Submit
-                            </button>
-                        </form>
+                            <form onSubmit={onCreateSubmit}>
+                                <FormGroup>
+                                    <label>Título:</label>
+                                    <input
+                                        style={{marginLeft: '10px'}}
+                                        className={"input"}
+                                        type="text"
+                                        name="titulo"
+                                    />
+                                </FormGroup>
+                                <FormGroup>
+                                    <label>Fecha de Publicación:</label>
+                                    <input
+                                        style={{marginLeft: '10px'}}
+                                        className={"input"}
+                                        type="date"
+                                        name="fechaPublicacion"
+                                    />
+                                </FormGroup>
+                                <FormGroup>
+                                    <label>ID del Autor:</label>
+                                    <input
+                                        style={{marginLeft: '10px'}}
+                                        className={"input"}
+                                        type="number"
+                                        name="autorId"
+                                    />
+                                </FormGroup>
+                                <button id={"createSubmitBtn"} type={"submit"} style={{display: 'none'}}>
+                                    Submit
+                                </button>
+                            </form>
 
                         </ModalBody>
 
@@ -206,40 +235,51 @@ function LibroPage() {
                         </ModalHeader>
 
                         <ModalBody>
-                            <FormGroup>
-                                <label>Título:</label>
-                                <input
-                                    className={"input"}
-                                    type="text"
-                                    name="titulo"
-                                    onChange={handleChange}
-                                    value={libros.titulo}
-                                />
-                            </FormGroup>
-                            <FormGroup>
-                                <label>Fecha de Publicación:</label>
-                                <input
-                                    className={"input"}
-                                    type="date"
-                                    name="fechaPublicacion"
-                                    onChange={handleChange}
-                                    value={libros.fechaPublicacion}
-                                />
-                            </FormGroup>
-                            <FormGroup>
-                                <label>ID del Autor:</label>
-                                <input
-                                    className={"input"}
-                                    type="number"
-                                    name="autorId"
-                                    onChange={handleChange}
-                                    value={libros.autorId}
-                                />
-                            </FormGroup>
+                            {editingLibro !== undefined ?
+                                <>
+                                    <form onSubmit={onEditSubmit}>
+                                        <FormGroup>
+                                            <label>Título:</label>
+                                            <input
+                                                className={"input"}
+                                                type="text"
+                                                name="tituloEdit"
+                                                value={editingLibro.titulo}
+                                                onChange={handleTituloChange}
+                                            />
+                                        </FormGroup>
+                                        <FormGroup>
+                                            <label>Fecha de Publicación:</label>
+                                            <input
+                                                className={"input"}
+                                                type="date"
+                                                name="fechaPublicacionEdit"
+                                                value={editingLibro.fechaPublicacion}
+                                                onChange={handleFechaPublicacionChange}
+                                            />
+                                        </FormGroup>
+                                        <FormGroup>
+                                            <label>ID del Autor:</label>
+                                            <input
+                                                className={"input"}
+                                                type="number"
+                                                name="autorIdEdit"
+                                                value={editingLibro.autorId}
+                                                onChange={handleAutorIdChange}
+                                            />
+                                        </FormGroup>
+                                        <button id={"editSubmitBtn"} type={"submit"} style={{display: 'none'}}>
+                                            Submit
+                                        </button>
+                                    </form>
+                                </> :
+                                <></>
+
+                            }
                         </ModalBody>
 
                         <ModalFooter>
-                            <Button color="primary" onClick={() => editLibro(libros)}>Editar</Button>
+                            <Button color="primary" onClick={onEditButton}>Editar</Button>
                             <Button color="danger" onClick={handleModalEditHide}>Cancelar</Button>
                         </ModalFooter>
                     </Modal>

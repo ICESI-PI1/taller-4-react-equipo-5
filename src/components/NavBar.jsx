@@ -22,6 +22,9 @@ function Navbar({ children }) {
                     <Link to="/author">
                         <Box p={2}>Authors</Box>
                     </Link>
+                    <Link to="/librosFromAuthor">
+                        <Box p={2}>Libros from Author</Box>
+                    </Link>
                     <Link to="/logout" onClick={handleLogOut}>
                         <Box p={2}>Log Out</Box>
                     </Link>
