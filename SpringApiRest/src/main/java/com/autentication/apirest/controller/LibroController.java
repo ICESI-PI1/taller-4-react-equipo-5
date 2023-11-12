@@ -24,9 +24,9 @@ public class LibroController {
         this.authorService = authorService;
     }
 
-    //Devuelve todos los autores
-    //El metodo retorna ResponseEntity porque nos da mayor control sobre los Status http que nos da el request
-    //Sirve para hacer las pruebas en PostmMan
+//    Devuelve todos los autores
+//    El metodo retorna ResponseEntity porque nos da mayor control sobre los Status http que nos da el request
+//    Sirve para hacer las pruebas en PostmMan
     @GetMapping
     public ResponseEntity<List<Libro>> getLibros() {
         List<Libro> libros = this.libroService.listLibros();
@@ -96,10 +96,9 @@ public class LibroController {
     // DELETE /autores/{id}: Eliminar un autor.
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteLibro(@PathVariable Long id) {
-        boolean result = libroService.deleteLibro(id);
+         libroService.deleteLibro(id);
 
-        return result ? (new ResponseEntity<>(HttpStatus.NO_CONTENT)) :
-                new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        return  (new ResponseEntity<>(HttpStatus.NO_CONTENT));
     }
 
 }

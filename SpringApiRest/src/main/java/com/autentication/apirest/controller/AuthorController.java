@@ -82,13 +82,13 @@ public class AuthorController {
     // DELETE /autores/{id}: Eliminar un autor.
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteAuthor(@PathVariable Long id) {
-        boolean result = authorService.deleteAuthor(id);
+         authorService.deleteAuthor(id);
 
-        return result ? (new ResponseEntity<>(HttpStatus.NO_CONTENT)) :
-                new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        return  (new ResponseEntity<>(HttpStatus.NO_CONTENT));
+
     }
 
-    // GET /autores/{id}/libros: Listar los libros de un autor específico.
+    //GET /autores/{id}/libros: Listar los libros de un autor específico.
     @GetMapping("/{id}/libros")
     public ResponseEntity<List<Libro>> getLibrosByAuthor(@PathVariable Long id) {
         List<Libro> libros = this.authorService.listLibrosFromAutor(id);

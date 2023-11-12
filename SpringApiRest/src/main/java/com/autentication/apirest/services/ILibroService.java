@@ -7,7 +7,7 @@ import java.util.Optional;
 
 public interface ILibroService {
     public Libro createLibro(Libro libro);
-    public boolean deleteLibro(Long id);
+    public void deleteLibro(Long id);
     public Optional<Libro> searchLibro(Long id);
     public List<Libro> listLibros();
     public Libro editLibro(Long id, Libro libro);
